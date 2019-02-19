@@ -1,14 +1,5 @@
 
-# coding: utf-8
-
-# In[1]:
-
-
-
 from datagenerator import *
-
-
-# In[2]:
 
 
 
@@ -162,42 +153,29 @@ model = MobileNet(width_multiplier=1,depth_multiplier=1,classes=NO_OF_CLASSES)
 
 model.compile(optimizer='adam',metrics=['accuracy'],loss='categorical_crossentropy')
 
-
-# In[4]:
-
-
 model.summary()
 
 
-# In[5]:
 
 
 
-train_generator = DataGenerator(batch_size=1,dim=(224,224),n_channels=3,list_IDs=partition['train'],
+
+train_generator = DataGenerator(batch_size=128,dim=(224,224),n_channels=3,list_IDs=partition['train'],
                                 labels=labels,n_classes=NO_OF_CLASSES)
 
-val_generator = DataGenerator(batch_size=1,dim=(224,224),n_channels=3,list_IDs=partition['train'],
+val_generator = DataGenerator(batch_size=128,dim=(224,224),n_channels=3,list_IDs=partition['train'],
                                 labels=labels,n_classes=NO_OF_CLASSES)
 
-
-# In[6]:
 
 
 ckpt = ModelCheckpoint(filepath='weights/{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_acc', save_best_only=True)
 tb = TensorBoard(log_dir='./logs', histogram_freq=1, batch_size=32 )
 
 
-# In[ ]:
+
 
 
 model.fit_generator(train_generator,
                     validation_data=val_generator,
                     use_multiprocessing=True,
                     workers=6, epochs = 100, callbacks = [ckpt,tb ])
-
-
-# In[ ]:
-
-
-#labels
-
